@@ -13,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -26,7 +27,11 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"email"}),
+		@UniqueConstraint(columnNames = {"username"}),
+		@UniqueConstraint(columnNames = {"password"})
+})
 public class User {
 
 	@Id
@@ -39,7 +44,7 @@ public class User {
 	private String password;
 	
 	@JsonIgnore
-	@OneToOne(mappedBy = "user")
+	@OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
 	private RefreshToken refreshToken;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

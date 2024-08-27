@@ -5,7 +5,7 @@ import com.example.payload.RefreshTokenRequest;
 
 public interface AuthService {
 	
-	String login(LoginRequest loginRequest);
+	String authenticate(LoginRequest loginRequest);
 	
 	String refreshToken(RefreshTokenRequest refreshTokenRequest);
 

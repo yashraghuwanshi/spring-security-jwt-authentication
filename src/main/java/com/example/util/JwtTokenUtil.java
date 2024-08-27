@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +21,8 @@ public class JwtTokenUtil implements Serializable {
 
 	private static final long ACCESS_TOKEN_VALIDITY_SECONDS = 1 * 60;
 
-	private static final String SIGNING_KEY = "secret";
+	@Value("${app.jwtSecret}")
+	private String jwtSecret;
 
 	public String getUsernameFromToken(String token) {
 		return getClaimFromToken(token, Claims::getSubject);
@@ -36,7 +38,7 @@ public class JwtTokenUtil implements Serializable {
 	}
 
 	private Claims getAllClaimsFromToken(String token) {
-		return Jwts.parser().setSigningKey(SIGNING_KEY).parseClaimsJws(token).getBody();
+		return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
 	}
 
 	private Boolean isTokenExpired(String token) {
@@ -55,10 +57,9 @@ public class JwtTokenUtil implements Serializable {
 		Date expiryDate = new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_SECONDS * 1000);
 
 		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(now).setExpiration(expiryDate)
-				.signWith(SignatureAlgorithm.HS256, SIGNING_KEY).compact();
+				.signWith(SignatureAlgorithm.HS256, jwtSecret).compact();
 	}
 	
-
 
 	public Boolean validateToken(String token, UserDetails userDetails) {
 		final String username = getUsernameFromToken(token);

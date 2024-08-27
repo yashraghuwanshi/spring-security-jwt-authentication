@@ -9,5 +9,6 @@ public interface UserService {
 
 	void saveUser(SignupRequest signupRequest);
 	List<User> getUser();
+	void deleteUser(long id);
 
 }

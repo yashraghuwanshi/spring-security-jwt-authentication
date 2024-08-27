@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 		user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
 		
 		Role role = new Role();
-		role.setName(UserRole.ROLE_ADMIN);
+		role.setName(UserRole.ROLE_USER);
 
 		user.setRoles(Collections.singleton(role));
 		userRepository.save(user);
@@ -51,5 +51,12 @@ public class UserServiceImpl implements UserService {
 	public List<User> getUser() {
 		return userRepository.findAll();
 	}
+
+	@Override
+	public void deleteUser(long id) {
+		userRepository.deleteById(id);
+	}
+	
+	
 
 }
